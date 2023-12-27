@@ -10,7 +10,7 @@ const chartStyle:React.CSSProperties = {
   
 export default function Chart():ReactElement{
     return(
-        <Box sx={{ padding: { xs: '0', md: '16px' }, flexGrow: { xs: '0', md: '1' } }}>
+        <Box sx={{ padding: { xs: '0', md: '0 16px 16px 16px' }, flexGrow: { xs: '0', md: '1' } }}>
         <div style={chartStyle}>chart</div>
         <Stack direction='row' spacing={2} sx={{marginTop:'12px'}}>
         <Box sx={{ minWidth: 120, mr:1 }}>

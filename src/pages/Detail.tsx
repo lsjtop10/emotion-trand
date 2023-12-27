@@ -11,7 +11,6 @@ export default function DetailPage() {
   return (
     
     <Box sx={{
-    padding: '12px',
     width: { xs: '100%', xl: '65vw' }, 
     display: 'flex', 
     alignItems: 'stretch', 
