@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ChartPage from './pages/Chart';
 import IntroductionPage from './pages/Introduction';
 import Footer from './components/Footer';
+import SettingPage from './pages/Settings';
 
 const theme: ThemeOptions = createTheme({
   palette: {
@@ -42,6 +43,7 @@ function App() {
                 <Route path="/" element={<IntroductionPage />} />
                 <Route path="/chart" element={<ChartPage />} />
                 <Route path="/Detail" element={<DetailPage />} />
+                <Route path="/settings" element={<SettingPage/>}/>
               </Routes>
             </Container>
           </BrowserRouter>
