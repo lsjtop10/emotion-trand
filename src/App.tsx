@@ -1,33 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Header from './components/Header'
+import Container from '@mui/material/Container';
+import { ThemeProvider } from '@mui/material/styles'
+import { ThemeOptions, createTheme } from '@mui/material/styles';
+import DetailPage from './pages/Detail';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import ChartPage from './pages/Chart';
+import IntroductionPage from './pages/Introduction';
+import Footer from './components/Footer';
+
+const theme: ThemeOptions = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#76D8A6',
+    },
+    secondary: {
+      main: '#ff7e63',
+    },
+    error: {
+      main: '#FF7E63',
+    },
+  },
+  typography: {
+    fontFamily: 'Noto Sans KR',
+  },
+});
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <ThemeProvider theme={theme}>
+        <div style={{display:'flex', flexDirection:'column', height:'100vh', overflow:'hidden'}}>
+          <BrowserRouter>
+            <Header/>
+            <Container maxWidth="xl" sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, flexGrow:1, flexShrink:1, overflow:'auto', padding:'12px'}}>
+              <Routes>
+                <Route path="/" element={<IntroductionPage />} />
+                <Route path="/chart" element={<ChartPage />} />
+                <Route path="/Detail" element={<DetailPage />} />
+              </Routes>
+            </Container>
+          </BrowserRouter>
+          <Footer/>
+        </div>
+      </ThemeProvider>
     </>
   )
 }
