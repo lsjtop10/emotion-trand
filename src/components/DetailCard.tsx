@@ -1,7 +1,5 @@
 import { useTheme } from "@emotion/react";
-import { PropaneSharp } from "@mui/icons-material";
 import { Box, CardContent, Typography, Card, CardActions, Button } from "@mui/material";
-import { internal_processStyles } from "@mui/styled-engine-sc";
 import React from "react";
 
 interface cardItem {
@@ -26,7 +24,7 @@ export default function DetailCard(props: cardItem) {
         <Typography variant="body2">
           {props.memoContent}
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{textAlign:"right"}}>
+        <Typography variant="body2" color="text.secondary" sx={{ textAlign: "right" }}>
           {dateString}
         </Typography>
       </CardContent>
@@ -36,7 +34,7 @@ export default function DetailCard(props: cardItem) {
     </React.Fragment>
   );
   return (
-    <Box sx={{ minWidth: 300 }}>
+    <Box>
       <Card variant="outlined"> {card}</Card>
     </Box>
   )

@@ -1,9 +1,8 @@
 
-import React, { Component } from "react";
 import { Chart } from "react-google-charts";
 
 interface LineChartProps {
-  
+
   /**
    * Line chart에 들어갈 데이터입니다.
    * 순서대로 문자열 형태의 시간과, number타입인 데이터가 들어갑니다.
@@ -19,13 +18,13 @@ export default function LineChart(props: LineChartProps) {
 
   const options = {
     curveType: "function",
-    legend: 'none',
-    outerWidth:props.width,
-    outerHeight:props.height,
-    chartArea:{width:"85%", height:"90%"}
+    legend: "none",
+    outerWidth: props.width,
+    outerHeight: props.height,
+    chartArea: { width: "85%", height: "90%" }
   };
 
-  const data:any = [
+  const data: any = [
     ["Date", "Average"],
   ];
 
@@ -34,7 +33,7 @@ export default function LineChart(props: LineChartProps) {
   })
 
   return (
-    
+
     <Chart
       chartType="LineChart"
       width={props.width}

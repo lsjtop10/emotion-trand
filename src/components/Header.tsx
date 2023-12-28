@@ -15,9 +15,8 @@ import logoBlack from '/logo-black.svg';
 import GoogleIcon from '@mui/icons-material/Google';
 
 import { useTheme } from '@mui/material/styles';
-import { Google, Margin } from '@mui/icons-material';
-import { Theme, colors } from '@mui/material';
-import { useNavigate, useNavigation } from 'react-router';
+import { Theme } from '@mui/material';
+import { useNavigate } from "react-router";
 
 /**
  * name:사용자에게 표시되는 페이지의 이름
@@ -25,9 +24,9 @@ import { useNavigate, useNavigation } from 'react-router';
  */
 
 
-const pages:string[] = ['Chart', 'Detail', 'Settings']
+const pages: string[] = ["Chart", "Detail", "Settings"]
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function UserSettingMenu() {
 
@@ -54,17 +53,17 @@ function UserSettingMenu() {
         </IconButton>
       </Tooltip>
       <Menu
-        sx={{ mt: '45px' }}
+        sx={{ mt: "45px" }}
         id="menu-appbar"
         anchorEl={anchorElUser}
         anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+          vertical: "top",
+          horizontal: "right",
         }}
         keepMounted
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+          vertical: "top",
+          horizontal: "right",
         }}
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}>
@@ -85,7 +84,7 @@ function LoginButton() {
 
   return (
     <Button variant="contained" sx={{ backgroundColor: theme.palette.secondary.main }}>
-      <div style={{ marginRight: '5px' }}>
+      <div style={{ marginRight: "5px" }}>
         Login with
       </div>
       <GoogleIcon />
@@ -107,13 +106,13 @@ function Header() {
   };
 
   // 네비게이션 메뉴 닫기
-  const handleCloseNavMenu = (e:React.MouseEvent<HTMLElement>) => {
+  const handleCloseNavMenu = (e: React.MouseEvent<HTMLElement>) => {
     console.log(e);
 
     //
-    const event = e.target as HTMLDivElement 
-    
-    switch (event.id){
+    const event = e.target as HTMLDivElement
+
+    switch (event.id) {
       case "chart-nav-button":
       case "chart-nav-item":
         navigation("\chart");
@@ -135,12 +134,12 @@ function Header() {
   const isLoggedIn: boolean = false;
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: theme.palette.primary.main }}>
+    <AppBar position="static" sx={{ backgroundColor: theme.palette.primary.main, zIndex: 2 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {/* 데스크탑 로고 */}
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1.5 }}>
-            <img src={logoSrc} style={{ height: '35px' }} />
+          <Box sx={{ display: { xs: "none", md: "flex" }, mr: 1.5 }}>
+            <img src={logoSrc} style={{ height: "35px" }} />
           </Box>
           <Typography
             variant="h6"
@@ -150,24 +149,24 @@ function Header() {
             sx={{
               // 로고 텍스트 스타일
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
+              display: { xs: "none", md: "flex" },
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.1rem',
-              color: 'rgba(0, 0, 0, 0.87)',
-              textDecoration: 'none',
+              letterSpacing: ".1rem",
+              color: "rgba(0, 0, 0, 0.87)",
+              textDecoration: "none",
             }}
           >
             Track Emotion
           </Typography>
           {/* 데스크탑에서 보이는 페이지 버튼 */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page}
                 id={page.toLowerCase() + "-nav-button"}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'rgba(0, 0, 0, 0.87)', display: 'block' }}
+                sx={{ my: 2, color: "rgba(0, 0, 0, 0.87)", display: "block" }}
               >
                 {page}
               </Button>
@@ -175,7 +174,7 @@ function Header() {
           </Box>
 
           {/* 모바일에서 보이는 왼쪽 햄버거 메뉴 */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -191,18 +190,18 @@ function Header() {
               id="menu-appbar"
               anchorEl={navAnchorElement}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: "bottom",
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                vertical: "top",
+                horizontal: "left",
               }}
               open={Boolean(navAnchorElement)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: "block", md: "none" },
               }}
             >
               {pages.map((page) => (
@@ -223,13 +222,13 @@ function Header() {
             sx={{
               // 모바일용 로고 텍스트 스타일
               mr: 2,
-              display: { xs: 'flex', md: 'none' },
+              display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: 'monospace',
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
             Track Emotion
