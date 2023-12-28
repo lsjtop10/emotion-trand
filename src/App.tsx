@@ -35,9 +35,10 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <div style={{display:'flex', flexDirection:'column', height:'100vh', overflow:'hidden'}}>
+        
           <BrowserRouter>
-            <Header/>
+          <div style={{display:'flex', flexDirection:'column', height:'100vh', overflow:'hidden'}}>
+            <Header></Header>
             <Container maxWidth="xl" sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, flexGrow:1, flexShrink:1, overflow:'auto', padding:'12px'}}>
               <Routes>
                 <Route path="/" element={<IntroductionPage />} />
@@ -46,9 +47,10 @@ function App() {
                 <Route path="/settings" element={<SettingPage/>}/>
               </Routes>
             </Container>
+            <Footer/>
+            </div>
           </BrowserRouter>
-          <Footer/>
-        </div>
+
       </ThemeProvider>
     </>
   )
