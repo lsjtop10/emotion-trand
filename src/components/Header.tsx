@@ -97,22 +97,21 @@ function LoginButton() {
 
 function Header() {
   // 상단 네비게이션 메뉴와 사용자 설정 메뉴의 상태 관리
-  const [navAnchorElement, setAnchorElNav] = React.useState<HTMLElement | null>(null);
+  const [navAnchorElement, setNavAnchorElement] = React.useState<HTMLElement | null>(null);
   const navigation = useNavigate();
 
   // 네비게이션 메뉴 열기
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
+    setNavAnchorElement(event.currentTarget);
   };
 
   // 네비게이션 메뉴 닫기
-  const handleCloseNavMenu = (e: React.MouseEvent<HTMLElement>) => {
-    console.log(e);
-
-    //
-    const event = e.target as HTMLDivElement
-
-    switch (event.id) {
+  const handleCloseNavMenu = (e: React.MouseEvent) => {
+    
+    console.log(e.currentTarget);
+    const target = e.currentTarget;
+    
+    switch (target.id) {
       case "chart-nav-button":
       case "chart-nav-item":
         navigation("\chart");
@@ -126,7 +125,8 @@ function Header() {
         navigation("\settings");
         break;
     }
-    setAnchorElNav(null);
+
+    setNavAnchorElement(null);
   };
 
   const logoSrc = logoBlack;
@@ -199,7 +199,7 @@ function Header() {
                 horizontal: "left",
               }}
               open={Boolean(navAnchorElement)}
-              onClose={handleCloseNavMenu}
+              /*onClose={handleCloseNavMenu}*/
               sx={{
                 display: { xs: "block", md: "none" },
               }}
