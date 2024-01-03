@@ -12,90 +12,27 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import logoBlack from '/logo-black.svg';
-import GoogleIcon from '@mui/icons-material/Google';
 
 import { useTheme } from '@mui/material/styles';
 import { Theme } from '@mui/material';
 import { useNavigate } from "react-router";
 
+import { useUserAccessToken } from '../stores/clientState';
+
+import axios from 'axios'
+import urlJoin from 'url-join';
+import LoginButton from './LoginButton';
+import UserProfile from './UserProfile';
+
 /**
  * name:사용자에게 표시되는 페이지의 이름
- * path:그 페이지의 주소
  */
-
 
 const pages: string[] = ["Chart", "Detail", "Settings"]
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
-function UserSettingMenu() {
-
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-  const navigate = useNavigate();
-
-  // 사용자 설정 메뉴 열기/닫기 함수
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  // 사용자 설정 메뉴 닫기 함수
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
-  console.log(anchorElUser);
-
-  return (
-    <>
-      <Tooltip title="Open settings">
-        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-        </IconButton>
-      </Tooltip>
-      <Menu
-        sx={{ mt: "45px" }}
-        id="menu-appbar"
-        anchorEl={anchorElUser}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        keepMounted
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        open={Boolean(anchorElUser)}
-        onClose={handleCloseUserMenu}>
-        {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleCloseUserMenu}>
-            <Typography textAlign="center">{setting}</Typography>
-          </MenuItem>
-        ))}
-      </Menu>
-    </>
-  );
-
-}
-
-function LoginButton() {
-
-  const theme: Theme = useTheme();
-
-  return (
-    <Button variant="contained" sx={{ backgroundColor: theme.palette.secondary.main }}>
-      <div style={{ marginRight: "5px" }}>
-        Login with
-      </div>
-      <GoogleIcon />
-    </Button>
-
-  )
-}
-
-
 
 function Header() {
+
   // 상단 네비게이션 메뉴와 사용자 설정 메뉴의 상태 관리
   const [navAnchorElement, setNavAnchorElement] = React.useState<HTMLElement | null>(null);
   const navigation = useNavigate();
@@ -107,10 +44,10 @@ function Header() {
 
   // 네비게이션 메뉴 닫기
   const handleCloseNavMenu = (e: React.MouseEvent) => {
-    
+
     console.log(e.currentTarget);
     const target = e.currentTarget;
-    
+
     switch (target.id) {
       case "chart-nav-button":
       case "chart-nav-item":
@@ -233,11 +170,10 @@ function Header() {
           >
             Track Emotion
           </Typography>
-
           <Box sx={{ flexGrow: 0 }}>
             {
               isLoggedIn ?
-                <UserSettingMenu /> :
+                <UserProfile imageSrc=' ' /> :
                 <LoginButton />
             }
           </Box>
