@@ -7,22 +7,19 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import logoBlack from '/logo-black.svg';
 
 import { useTheme } from '@mui/material/styles';
-import { Theme } from '@mui/material';
 import { useNavigate } from "react-router";
 
-import { useUserAccessToken } from '../stores/clientState';
 
-import axios from 'axios'
-import urlJoin from 'url-join';
 import LoginButton from './LoginButton';
 import UserProfile from './UserProfile';
+import { useUserAccessToken } from '../stores/clientState';
+import { useGoogleLogin, TokenResponse } from '@react-oauth/google';
+import { handleLoginByGoogle } from '../service/login';
 
 /**
  * name:사용자에게 표시되는 페이지의 이름
@@ -37,6 +34,19 @@ function Header() {
   const [navAnchorElement, setNavAnchorElement] = React.useState<HTMLElement | null>(null);
   const navigation = useNavigate();
 
+  const {setToken} = useUserAccessToken();
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (res: TokenResponse) => {
+      try {
+        const token = await handleLoginByGoogle(res)
+        setToken(token);
+        navigation("/chart");
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  });
+
   // 네비게이션 메뉴 열기
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setNavAnchorElement(event.currentTarget);
@@ -45,7 +55,6 @@ function Header() {
   // 네비게이션 메뉴 닫기
   const handleCloseNavMenu = (e: React.MouseEvent) => {
 
-    console.log(e.currentTarget);
     const target = e.currentTarget;
 
     switch (target.id) {
@@ -66,9 +75,11 @@ function Header() {
     setNavAnchorElement(null);
   };
 
+  const {accessToken} = useUserAccessToken()
+
   const logoSrc = logoBlack;
   const theme = useTheme();
-  const isLoggedIn: boolean = false;
+  const isLoggedIn: boolean = !!accessToken;
 
   return (
     <AppBar position="static" sx={{ backgroundColor: theme.palette.primary.main, zIndex: 2 }}>
@@ -174,7 +185,7 @@ function Header() {
             {
               isLoggedIn ?
                 <UserProfile imageSrc=' ' /> :
-                <LoginButton />
+                <LoginButton onClick={googleLogin}/>
             }
           </Box>
         </Toolbar>
