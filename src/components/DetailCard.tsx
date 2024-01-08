@@ -21,7 +21,7 @@ export default function DetailCard(props: cardItem) {
         <Typography variant="h5" component="div">
           {props.emotionLevel}
         </Typography>
-        <Typography variant="body2">
+        <Typography variant="body2" sx={{marginTop:"2px"}}>
           {props.memoContent}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ textAlign: "right" }}>
