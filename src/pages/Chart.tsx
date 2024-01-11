@@ -1,56 +1,79 @@
-import { Box, TextField, Slider, Button, FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material';
+import { Box, TextField, Slider, Button, FormControl, InputLabel, MenuItem, Select, Stack, SelectChangeEvent } from '@mui/material';
 import * as React from 'react';
-import LineChart from "../components/charts/Line";
 import styled from "styled-components";
-
-const candlestickEl: [string, number, number, number, number][] = [
-  ["Mon", 20, 28, 38, 45],
-  ["Tue", 31, 38, 55, 66],
-  ["Wed", 50, 55, 77, 80],
-  ["Thu", 77, 77, 66, 50],
-  ["Fri", 68, 66, 22, 15],
-  ["Mon", 20, 28, 38, 45],
-  ["Tue", 31, 38, 55, 66],
-  ["Wed", 50, 55, 77, 80],
-  ["Thu", 77, 77, 66, 50],
-  ["Fri", 68, 66, 22, 15]
-]
-const lineEl: [string, number][] = [
-  ["2004", 1000],
-  ["2005", 1170],
-  ["2006", 660],
-  ["2007", 1030],
-  ["2004", 1000],
-  ["2005", 1170],
-  ["2006", 660],
-  ["2007", 1030],
-  ["2004", 1000],
-  ["2005", 1170],
-  ["2006", 660],
-  ["2007", 1030]
-]
+import CandlestickChart from '../components/charts/Candlestick';
+import LineChart from "../components/charts/Line";
+import axios from 'axios';
+import urlJoin from 'url-join';
+import { API_BASE_URL } from '../constants';
+import { useUserAccessToken } from '../stores/clientState';
 
 const ChartContainer = styled.div`
   aspect-ratio: 16/10;
 `
 
+
+// 선택한 차트의 종류에 따라서 차트 컴포넌트를 교체해 줘야 한다.
+// time slice에 따라서 데이터를 새로 요청해야 한다.
+// submit 버튼을 누르면 차트가 다시 렌더링 돼야 한다.
+// 각각의 차트 종류마다 허용되는 time slice가 다를 수도 있다. ex: candlestick은 1d, 1w, 1y,  line은 1d, 6m, 1y 
+// level input box는 범위가 벗어나면 error state로 변경돼야 한다.
+
 export default function ChartPage() {
-  const [value, setValue] = React.useState<number>(30);
-  const handleChange = (_event: Event, newValue: number | number[]) => {
-    setValue(newValue as number);
-  };
+  const [chartType, setChartType] = React.useState<string>("candle");
+  const [timeSlice, setTimeSlice] = React.useState<string>("1d");
+  const [levelValue, setLevelValue] = React.useState<number>(0);
+  const [memoContent, setMemoContent] = React.useState<string>("");
+  const { accessToken } = useUserAccessToken();
 
   const min: number = -1000;
   const max: number = 1000;
 
-  let chart = LineChart;
+  const chartComponents: { [key: string]: React.ElementType } = {
+    candle: CandlestickChart,
+    line: LineChart,
+  };
+
+  const Chart = chartComponents[chartType];
+
+  const handleChartTypeChange = (event: SelectChangeEvent<string>) => {
+    const selectedChartType = event.target.value as string;
+    setChartType(selectedChartType);
+  };
+
+  const handleLevelSliderChange = (event: Event, newValue: number | number[]) => {
+    setLevelValue(newValue as number);
+  };
+
+  const handleLevelTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+    const val = Number(event.target.value)
+
+    setLevelValue(Number(event.target.value))
+  }
+
+  const handleSubmitBtnClick = (event: React.MouseEvent) => {
+    axios.post(urlJoin(API_BASE_URL, "/posts"),{
+        timestamp: Date.now(),
+        level: levelValue,
+        content: memoContent,
+      },{
+        headers: {
+          accessToken: accessToken,
+        }
+      }
+    ).catch((e) => console.log(e))
+    setMemoContent("");
+  }
+
   return (
     <>
-
       <Stack direction="column" sx={{ width: { xs: "100%", md: "70%" }, height: "100%" }}>
 
         <ChartContainer>
-          {chart({ elements: lineEl, width: "100%", height: "100%" })}
+          {
+            <Chart width="100%" height="100%" timeSlice={timeSlice} />
+          }
         </ChartContainer>
 
         <Stack direction="row" spacing={2} sx={{ marginTop: "12px" }}>
@@ -61,13 +84,15 @@ export default function ChartPage() {
                 labelId="type-select-label"
                 id="type-select"
                 label="Chart Type"
-                defaultValue="candle"
+                value={chartType}
+                onChange={handleChartTypeChange}
               >
                 <MenuItem value="candle">Candle Stick</MenuItem>
                 <MenuItem value="line">Line</MenuItem>
               </Select>
             </FormControl>
           </Box>
+
 
           <Box sx={{ minWidth: 120, flexBasis: { md: "12rem" } }}>
             <FormControl fullWidth>
@@ -76,7 +101,8 @@ export default function ChartPage() {
                 labelId="type-select-label"
                 id="type-select"
                 label="Time Slice"
-                defaultValue="1d"
+                value={timeSlice}
+                onChange={(event) => { setTimeSlice(event.target.value) }}
               >
                 <MenuItem value="1d">Day</MenuItem>
                 <MenuItem value="1w">Week</MenuItem>
@@ -97,13 +123,32 @@ export default function ChartPage() {
           flexDirection: "column",
           justifyContent: "flex-start",
           alignItems: "stretch",
-          gap: "16px"
+          gap: "16px",
+          marginTop:"16px",
         }}>
 
-        <TextField id="emotion-fields" label="emotion level" required variant="standard"></TextField>
-        <Slider aria-label="emotion level slider" value={value} onChange={handleChange} min={min} max={max} />
-        <TextField id="memo-fields" label="memo" multiline minRows={7} maxRows={7} sx={{ width: "100%" }}></TextField>
-        <Button variant="contained" sx={{ width: "100%" }}>submit</Button>
+        <TextField
+          id="emotion-fields"
+          label="emotion level"
+          required error={levelValue > max || levelValue < min}
+          value={levelValue}
+          onChange={handleLevelTextChange}></TextField>
+        <Slider
+          aria-label="emotion level slider"
+          value={levelValue}
+          min={min} max={max}
+          onChange={handleLevelSliderChange} />
+        <TextField id="memo-fields"
+          label="memo"
+          multiline minRows={7}
+          maxRows={7}
+          sx={{ width: "100%" }}
+          value={memoContent}
+          onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setMemoContent(event.target.value)
+          }}>
+        </TextField>
+        <Button variant="contained" sx={{ width: "100%" }} onClick={handleSubmitBtnClick}>submit</Button>
       </Box>
     </>
   )
