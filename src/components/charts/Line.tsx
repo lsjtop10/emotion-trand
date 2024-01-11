@@ -1,20 +1,24 @@
 
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Chart } from "react-google-charts";
+import urlJoin from "url-join";
+import { API_BASE_URL } from "../../constants";
+import { useUserAccessToken } from "../../stores/clientState";
 
-interface LineChartProps {
-
-  /**
-   * Line chart에 들어갈 데이터입니다.
-   * 순서대로 문자열 형태의 시간과, number타입인 데이터가 들어갑니다.
-   */
-
-  elements: [string, number][];
-  width: string;
-  height?: string;
+interface LineChartElement{
+  from:number, 
+  val:number
 }
 
-export default function LineChart(props: LineChartProps) {
-  console.log(props);
+export default function LineChart(props: { width: string, height?: string, timeSlice: string}) {
+
+  const {accessToken} = useUserAccessToken();
+  const [display, setDisplay] = useState<any[]>([])
+
+  const data: any = [
+    ["Date", "Average"],
+  ];
 
   const options = {
     curveType: "function",
@@ -23,22 +27,43 @@ export default function LineChart(props: LineChartProps) {
     outerHeight: props.height,
     chartArea: { width: "85%", height: "90%" }
   };
+  let elements: [string, number][];
 
-  const data: any = [
-    ["Date", "Average"],
-  ];
+  useEffect(() => {
+    axios.get<{elements:LineChartElement[]}>(
+      urlJoin(API_BASE_URL, "/chart/line/ave/"), {
+      params: {
+        timeSlice: props.timeSlice
+      },
+      headers: {
+        "accessToken": accessToken,
+      },
+      withCredentials: true
+    })
+    .then(
+      (res) => {
+        console.log(res);
+        elements = res.data.elements.map((value) => {
+            return [new Date(value.from * 1000).toDateString(), 
+            value.val,]
+        });
+        setDisplay([["Date", "Average"], ...elements]);
+      })
+    .catch(
+      (e) =>{console.error(e)}
+    )
+  }, [props.timeSlice])
+ 
 
-  props.elements.map((e) => {
-    data.push([...e]);
-  })
+
 
   return (
 
     <Chart
       chartType="LineChart"
       width={props.width}
-      height={props.height}
-      data={data}
+      height={props.height || "100%"}
+      data={display}
       options={options}
     />
   );
