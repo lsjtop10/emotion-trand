@@ -17,8 +17,6 @@ export default function UserProfile(props: { imageSrc: string }) {
     setAnchorElUser(null);
   };
 
-  console.log(anchorElUser);
-
   return (
     <>
       <Tooltip title="Open settings">

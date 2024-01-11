@@ -8,6 +8,7 @@ import ChartPage from './pages/Chart';
 import IntroductionPage from './pages/Introduction';
 import Footer from './components/Footer';
 import SettingPage from './pages/Settings';
+import axios from 'axios';
 
 const theme: ThemeOptions = createTheme({
   palette: {
@@ -28,6 +29,7 @@ const theme: ThemeOptions = createTheme({
 });
 
 
+axios.defaults.withCredentials = true;
 
 function App() {
 

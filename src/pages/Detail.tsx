@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
 import DetailCard from "../components/DetailCard";
 import { useEffect, useState } from "react";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import urlJoin from "url-join";
-import Header from "../components/Header";
 import { useUserAccessToken } from "../stores/clientState";
+import { API_BASE_URL } from "../constants";
 
 interface Posts {
   timestamp: number,
@@ -12,25 +12,26 @@ interface Posts {
   content: string
 }
 
+
 export default function DetailPage() {
 
   const [posts, setPosts] = useState<Posts[] | never[]>([]);
   const { accessToken } = useUserAccessToken()
-  const baseUrl = import.meta.env.VITE_API_URL;
+
   axios.defaults.withCredentials = true;
 
   // TODO: separate facing logic to other layer
   useEffect(
     () => { 
-    axios.get(urlJoin(baseUrl, "/posts"), {
+    axios.get<{elements:Posts[]}>(urlJoin(API_BASE_URL, "/posts"), {
       headers: {
         "accessToken": accessToken,
       },
       withCredentials: true
     }).then((res) => { 
-      setPosts(res.data.elements) }
+      setPosts(res.data.elements); }
     ).catch(
-        (e) => { console.log(e) }
+        (e) => { console.log(e); }
     )}
     , [])
 
