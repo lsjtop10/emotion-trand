@@ -5,37 +5,20 @@ import axios from "axios";
 import urlJoin from "url-join";
 import { useUserAccessToken } from "../stores/clientState";
 import { API_BASE_URL } from "../constants";
-
-interface Posts {
-  timestamp: number,
-  level: number,
-  content: string
-}
+import { GetPosts} from "../services/posts";
+import { Post } from "@src/@types/DTO";
 
 
 export default function DetailPage() {
 
-  const [posts, setPosts] = useState<Posts[] | never[]>([]);
-  const { accessToken } = useUserAccessToken()
+  const {accessToken} = useUserAccessToken()
+  const [posts, setPosts] = useState<Post[] | never[]>([]);
 
-  axios.defaults.withCredentials = true;
-
-  // TODO: separate facing logic to other layer
-  useEffect(
-    () => { 
-    axios.get<{elements:Posts[]}>(urlJoin(API_BASE_URL, "/posts"), {
-      headers: {
-        "accessToken": accessToken,
-      },
-      withCredentials: true
-    }).then((res) => { 
-      setPosts(res.data.elements); }
-    ).catch(
-        (e) => { console.log(e); }
-    )}
-    , [])
-
-
+  useEffect(()=>{
+    GetPosts(accessToken)
+    .then((res) => setPosts(res))
+    .catch((e) => console.log(e))
+  },[])
 
 return (
   <div style={{ display: "flex", width: "100%", justifyContent: "center" }} >

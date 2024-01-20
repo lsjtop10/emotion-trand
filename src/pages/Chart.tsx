@@ -7,6 +7,7 @@ import axios from 'axios';
 import urlJoin from 'url-join';
 import { API_BASE_URL } from '../constants';
 import { useUserAccessToken } from '../stores/clientState';
+import { PostPost } from '@src/services/posts';
 
 const ChartContainer = styled.div`
   aspect-ratio: 16/10;
@@ -53,16 +54,13 @@ export default function ChartPage() {
   }
 
   const handleSubmitBtnClick = (event: React.MouseEvent) => {
-    axios.post(urlJoin(API_BASE_URL, "/posts"),{
-        timestamp: Date.now(),
-        level: levelValue,
-        content: memoContent,
-      },{
-        headers: {
-          accessToken: accessToken,
-        }
-      }
-    ).catch((e) => console.log(e))
+    PostPost({
+      content: memoContent,
+      level: levelValue,
+      timestamp: Date.now(),
+    }).catch(
+      (e) => {console.error(e)}
+    );
     setMemoContent("");
   }
 
