@@ -19,7 +19,7 @@ import LoginButton from './LoginButton';
 import UserProfile from './UserProfile';
 import { useUserAccessToken } from '../stores/clientState';
 import { useGoogleLogin, TokenResponse } from '@react-oauth/google';
-import { handleLoginByGoogle } from '../service/login';
+import { handleLoginByGoogle } from '../services/login';
 
 /**
  * name:사용자에게 표시되는 페이지의 이름

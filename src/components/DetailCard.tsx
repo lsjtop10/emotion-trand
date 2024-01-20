@@ -14,7 +14,6 @@ export default function DetailCard(props: cardItem) {
     navigator.language
   );
 
-  const theme = useTheme();
   const card = (
     <React.Fragment>
       <CardContent>
