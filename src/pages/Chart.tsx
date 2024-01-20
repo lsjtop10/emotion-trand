@@ -1,12 +1,9 @@
 import { Box, TextField, Slider, Button, FormControl, InputLabel, MenuItem, Select, Stack, SelectChangeEvent } from '@mui/material';
 import * as React from 'react';
 import styled from "styled-components";
-import CandlestickChart from '../components/charts/Candlestick';
-import LineChart from "../components/charts/Line";
-import axios from 'axios';
-import urlJoin from 'url-join';
-import { API_BASE_URL } from '../constants';
-import { useUserAccessToken } from '../stores/clientState';
+import CandlestickChart from '@src/components/charts/Candlestick';
+import LineChart from "@src/components/charts/Line";
+import { useUserAccessToken } from '@src/stores/clientState';
 import { PostPost } from '@src/services/posts';
 
 const ChartContainer = styled.div`
@@ -25,7 +22,6 @@ export default function ChartPage() {
   const [timeSlice, setTimeSlice] = React.useState<string>("1d");
   const [levelValue, setLevelValue] = React.useState<number>(0);
   const [memoContent, setMemoContent] = React.useState<string>("");
-  const { accessToken } = useUserAccessToken();
 
   const min: number = -1000;
   const max: number = 1000;
@@ -48,9 +44,23 @@ export default function ChartPage() {
 
   const handleLevelTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
-    const val = Number(event.target.value)
+    let val = Number(event.target.value);
 
-    setLevelValue(Number(event.target.value))
+    if(Number.isNaN(val))
+    {
+      return;
+    }
+    
+    if(val < min)
+    {
+      val = min;
+    }
+    else if(val > max)
+    {
+      val = max;
+    }
+
+    setLevelValue(val)
   }
 
   const handleSubmitBtnClick = (event: React.MouseEvent) => {
